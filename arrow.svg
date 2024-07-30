@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="24.055281mm"
+   height="39.326324mm"
+   viewBox="0 0 24.055281 39.326324"
+   version="1.1"
+   id="svg1"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     showguides="false" />
+  <defs
+     id="defs1" />
+  <g
+     inkscape:label="Camada 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-15.394789,-91.626294)">
+    <g
+       id="g6"
+       inkscape:export-filename="arrow.svg"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96"
+       style="display:inline">
+      <path
+         style="fill:#fc7305;fill-opacity:1;stroke-width:1.989;stroke-linecap:round;paint-order:markers stroke fill"
+         d="m 17.433321,130.95262 5.000256,-24.19042 10.405937,-0.54057 5.270537,24.32557 z"
+         id="path7"
+         sodipodi:nodetypes="ccccc" />
+      <path
+         style="fill:#fc7305;fill-opacity:1;stroke-width:1.989;stroke-linecap:round;paint-order:markers stroke fill"
+         d="M 27.692714,91.626296 15.39479,108.65419 39.45007,108.38391 Z"
+         id="path8"
+         sodipodi:nodetypes="cccc" />
+    </g>
+  </g>
+</svg>

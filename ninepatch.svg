@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="33.696682mm"
+   height="34.019306mm"
+   viewBox="0 0 33.696682 34.019306"
+   version="1.1"
+   id="svg1"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm" />
+  <defs
+     id="defs1" />
+  <g
+     inkscape:label="Camada 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-41.281854,-66.509649)">
+    <rect
+       style="fill:#531a5d;fill-opacity:1;stroke-width:1.8675;stroke-linecap:round;paint-order:markers stroke fill"
+       id="rect1"
+       width="33.696678"
+       height="34.019306"
+       x="41.281857"
+       y="66.509651"
+       ry="4.7299709"
+       inkscape:export-filename="rect1.png"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96" />
+    <rect
+       style="fill:#5250a2;fill-opacity:1;stroke-width:1.77423;stroke-linecap:round;paint-order:markers stroke fill"
+       id="rect2"
+       width="31.804689"
+       height="32.532742"
+       x="42.295422"
+       y="67.25293"
+       ry="4.5232825" />
+  </g>
+</svg>
