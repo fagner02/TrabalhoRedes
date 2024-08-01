@@ -68,14 +68,10 @@ func  get_ip():
 	var ip: String
 
 	for address in IP.get_local_interfaces():
-		if address["friendly"] == "Wi-Fi" or address["friendly"].find("lan") != -1:
+		if address["friendly"].to_lower().begins_with("w"):
 			ip = address["addresses"].filter(func(x: String): return x.split(".").size() == 4)[0]
 			break
-	
-	for address in IP.get_local_addresses():
-		if (address.split('.').size() == 4) and address.split(".")[0]!= "127":
-			ip=address
-	print(ip)
+			
 	return ip
 
 func _on_name_text_changed():
