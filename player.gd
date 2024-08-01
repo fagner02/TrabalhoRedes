@@ -24,7 +24,7 @@ func select(new_direction: Vector2):
 		selecting = true
 		selection.play("open")
 
-func _process(delta):
+func _process(_delta):
 	if selecting: 
 		player.rotate(deg_to_rad(10))
 		return

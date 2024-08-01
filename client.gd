@@ -10,14 +10,14 @@ var playerscene = preload("res://player.tscn")
 func _ready():
 	pass
 
-func _process(delta):
+func _process(_delta):
 	udp_server.poll()
-	
+
 	if udp_server.is_connection_available():
 		print("connected")
 		var connection = udp_server.take_connection()
 		$"textt".text += connection.get_packet_ip()+"\n"
-		if !peers.any(func(x: PacketPeerUDP): x.get_packet_ip() == connection.get_packet_ip()):
+		if not peers.any(func(x: PacketPeerUDP): x.get_packet_ip() == connection.get_packet_ip()):
 			peers.append(connection)
 	get_packets()
 
@@ -71,6 +71,10 @@ func  get_ip():
 		if address["friendly"] == "Wi-Fi" or address["friendly"].find("lan") != -1:
 			ip = address["addresses"].filter(func(x: String): return x.split(".").size() == 4)[0]
 			break
+	
+	for address in IP.get_local_addresses():
+		if (address.split('.').size() == 4) and address.split(".")[0]!= "127":
+			ip=address
 	print(ip)
 	return ip
 
