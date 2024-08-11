@@ -6,7 +6,6 @@ var speed = 100
 var selecting = true
 @onready var player = $"Body"
 @onready var selection = $"Body/AnimationPlayer"
-@export var pos = Vector2(0,0)
 
 func _ready():
 	var _rotation = player.rotation
@@ -18,6 +17,7 @@ func select(new_direction: Vector2, rot, pos, vel):
 	player.position = pos
 	velocity = vel
 	direction = new_direction
+	print("slect")
 	
 	if selecting:
 		selecting = false
@@ -36,6 +36,6 @@ func _process(_delta):
 	if selecting: 
 		player.rotate(deg_to_rad(10))
 		return
-	var collision = move_and_collide(velocity)
+	move_and_collide(velocity)
 	velocity *= 0.99
 	

@@ -4,36 +4,56 @@ class Peer:
 	var connection: PacketPeerUDP
 	var ip: String
 	var port: String
-	
+
 class Oponent:
 	var name: String
 	var player: CharacterBody2D
+	var score: int
 
-var initial_pos = Vector2(100,100)
+class Point:
+	var name: String
+	var point: Sprite2D
+
 var ip = get_ip()
-var port = 5000
+var initial_port = 5000
+var add_to_port = 0
 var client = PacketPeerUDP.new()
 var udp_server = UDPServer.new()
+var is_host = false
 var peers: Array[Peer] = []
+
+var points: Array[Point] = []
 var oponents: Array[Oponent] = []
+var initial_pos = Vector2(100,100)
+var score = 0
 var started = false
+var finished = false
+
 @onready var background = $"background"
 @onready var controls = $"Control"
 @onready var bounds = $"StaticBody2D"
+@onready var player = $"player"
 @onready var background_size = Vector2(background.texture.get_width(), background.texture.get_height())
-var playername = ""
-var is_host = false
-var playerscene = preload("res://oponent.tscn")
 @onready var screen_size = Vector2.ZERO
 
-@onready var player = $"player"
+@onready var point_timer = $"PointTimer"
+@onready var game_timer = $"GameTimer"
+@onready var select_timer = $"SelectTimer"
+
+var playername = ""
+var playerscene = preload("res://oponent.tscn")
+var pointscene = preload("res://point.tscn")
+
+var rng = RandomNumberGenerator.new()
+var pad = Vector2(20, 20)
 
 func _ready():
 	player.position = initial_pos
-	if udp_server.listen(port, ip) != OK:
-		port += 1
-		udp_server.listen(port, ip)
-		
+	while (add_to_port < 10):
+		if udp_server.listen(initial_port+add_to_port, ip) == OK:
+			break
+		add_to_port += 1
+	game_timer.one_shot = true
 
 func _process(_delta):
 	if (get_viewport_rect().size != screen_size):
@@ -50,29 +70,31 @@ func _process(_delta):
 		var ratio = Vector2(((screen_size/2.0).length()*2.0)/screen_size.x, ((screen_size/2.0).length()*2.0)/screen_size.y)
 		background.scale = ((screen_size/background_size) * ratio)
 		background.position = screen_size/2.0
-
+	var minutes = floor(game_timer.time_left/60.0)
+	var seconds = floor(game_timer.time_left- minutes*60)
+	$"%timestamp".text = str(minutes).lpad(2, "0")+":"+str(seconds).lpad(2, "0")
+	if game_timer.time_left == 0 and started:
+		finished = true
+		if (oponents.any(func(x): return x.score > score)):
+			$"%result_text".text = "YOU LOST"
+		else:
+			$"%result_text".text = "YOU WIN"
+		$"%result".visible=true
+	if finished:
+		return
 	udp_server.poll()
  
-	if udp_server.is_connection_available() and is_host:
+	if udp_server.is_connection_available() and is_host and not started:
 		var connection = udp_server.take_connection()
-		
-		var req = JSON.parse_string(connection.get_packet().get_string_from_utf8())
-		
-		print("connection received(on "+ip+":"+str(port)+"): from "+req.from)
-		var from = req.from.split(":")
+		connection.get_packet()
 		
 		var new_peer = Peer.new()
 		new_peer.connection = connection
-		new_peer.ip = from[0]
-		new_peer.port = from[1]
-		
 		peers.append(new_peer)
-	
-		print("peer added(on "+ip+":"+str(port)+"): ", new_peer.ip, ":", new_peer.port)
+		
 		connection.put_packet(JSON.stringify({
-			"from":ip+":"+str(port),
 			"action":"connected", 
-			"players": oponents.map(func(x): x.name) + [playername]
+			"players": oponents.map(func(x): return x.name) + [playername]
 		}).to_utf8_buffer())
 	get_packets()
 
@@ -83,19 +105,25 @@ func get_packets():
 		var json = client.get_packet().get_string_from_utf8()
 		var res = JSON.parse_string(json)
 
-		print("connected to host")
 		if (res.action == "connected"):
-			client.put_packet(JSON.stringify({"from":ip+":"+str(port),"action":"add", "name": playername}).to_utf8_buffer())
+			client.put_packet(JSON.stringify({"action":"add", "name": playername}).to_utf8_buffer())
 			for _player in res.players:
 				add_oponent(_player)
 		if (res.action == "add"):
 			add_oponent(res.name)
 		if (res.action == "select"):
 			oponent_select(res)
-		if (res.action == "start"):
-			started = true
 		if (res.action == "collide"):
-				oponent_collide(res)
+			oponent_collide(res)
+		if (res.action == "point"):
+			oponent_point(res)
+		if (res.action == "create_point"):
+			create_point(Vector2(res.pos.x, res.pos.y), res.name)
+		if (res.action == "start"):
+			$"%waitingsign".visible = false
+			$"%scorebox".visible = true
+			started = true
+			game_timer.start(20)
 		return
 		
 	for peer: Peer in peers:
@@ -112,13 +140,53 @@ func get_packets():
 				send_packets(res, peer)
 			if (res.action == "collide"):
 				oponent_collide(res)
-				
+				send_packets(res, peer)
+			if res.action == "point":
+				oponent_point(res)
+				send_packets(res, peer)
+			
 
 func send_packets(data, _peer = null):
 	for peer: Peer in peers:
 		if peer != _peer or _peer == null:
 			peer.connection.put_packet(JSON.stringify(data).to_utf8_buffer())
-			
+
+func create_point(_pos = null, _name = null):
+	if _pos == null:
+		_pos = (screen_size - (pad*2)) * Vector2(rng.randf(), rng.randf())
+		_name = "point"
+		
+	var point = Point.new()
+	point.point = pointscene.instantiate()
+	point.point.position = _pos
+	add_child(point.point)
+	point.point.name = _name 
+	point.name = point.point.name
+	points.append(point)
+	return [_pos, point.name]
+
+func consume_point(_name):
+	score+=1
+	$"%score".text = "score: "+str(score)
+	var point = points.filter(func(x): return x.name == _name)[0]
+	var packet = {
+		"action": "point",
+		"player": playername,
+		"name":  point.name
+	}
+	point.point.queue_free()
+	points.erase(point)
+	if is_host:
+		send_packets(packet)
+	else:
+		client.put_packet(JSON.stringify(packet).to_utf8_buffer())
+
+func oponent_point(res):
+	oponents.filter(func(x): return x.name == res.player)[0].score+=1
+	var point = points.filter(func(x): return x.name == res.name)[0]
+	point.point.queue_free()
+	points.erase(point)
+	
 func oponent_select(res):
 	var oponent = oponents.filter(func(x): return x.name == res.player)[0]
 	oponent.player.select(
@@ -151,7 +219,7 @@ func send_select(new_direction: Vector2, rot, pos: Vector2, vel):
 		send_packets(packet)
 	else:
 		client.put_packet(JSON.stringify(packet).to_utf8_buffer())
-		
+
 func send_collide(new_direction: Vector2, rot, pos: Vector2, vel):
 	var packet = {
 		"from": ":",
@@ -166,6 +234,7 @@ func send_collide(new_direction: Vector2, rot, pos: Vector2, vel):
 		send_packets(packet)
 	else:
 		client.put_packet(JSON.stringify(packet).to_utf8_buffer())
+
 func add_oponent(_name):
 	var new_oponent = Oponent.new()
 	new_oponent.player = playerscene.instantiate()
@@ -173,20 +242,18 @@ func add_oponent(_name):
 	new_oponent.name = _name
 	add_child(new_oponent.player)
 	oponents.append(new_oponent)
+
 func _on_button_join_host():
 	var code: String = $"%iptext".text
 	if code.length() < 4:
 		return
 	var dest = ".".join(ip.split(".").slice(0, 2))+"."+\
 		".".join([0, 2].map(func(num): return str(code.substr(num, 2).hex_to_int())))
-	
-	$"textt".text += dest+":"+str(5000+int(code.substr(4,1)))+"\n"
-	print("send(from "+ip+":"+str(port)+"): to "+dest+":"+str(5000+int(code.substr(4,1))))
-	
+
 	$"%startmenu".visible = false
 	$"%waitingsign".visible = true
-	client.connect_to_host(dest, 5000+int(code.substr(4,1)))
-	client.put_packet(JSON.stringify({"from":ip+":"+str(port),"action":"connect", "name":playername}).to_utf8_buffer())
+	client.connect_to_host(dest, initial_port+int(code.substr(4,1)))
+	client.put_packet(JSON.stringify({"action":"connect", "name":playername}).to_utf8_buffer())
 
 func _on_button_create_host():
 	is_host = true
@@ -195,7 +262,7 @@ func _on_button_create_host():
 	
 	$"%startmenu".visible = false
 	$"%hostmenu".visible = true
-	$"%code".text = res+str(port-5000)
+	$"%code".text = res+str(add_to_port)
 
 func  get_ip():
 	var _ip: String
@@ -209,13 +276,26 @@ func  get_ip():
 
 func _on_name_text_changed():
 	playername = $"%name".text
-	pass # Replace with function body.
+	pass 
 
 func _on_start_pressed():
 	$"%hostmenu".visible=false
+	$"%scorebox".visible = true
 	started = true
 	send_packets({
 		"from": ":",
 		"action": "start"
 	})
-	pass # Replace with function body.
+	point_timer.start(2)
+	game_timer.start(20)
+	pass
+
+func _on_point_timeout():
+	var values = create_point()
+	var _pos = values[0]
+	send_packets({
+		"action": "create_point",
+		"pos": {"x": _pos.x, "y": _pos.y},
+		"name": values[1]
+	})
+	

@@ -34,6 +34,9 @@ func _process(_delta):
 		return
 	var collision = move_and_collide(velocity)
 	if collision:
+		if (collision.get_collider().name.begins_with("point")):
+			$"../".consume_point(collision.get_collider().get_parent().name)
+			return
 		velocity = velocity.bounce(collision.get_normal())
 		player.rotation = velocity.angle()+deg_to_rad(90)
 		$"../".send_collide(direction, player.rotation, player.position, velocity)
