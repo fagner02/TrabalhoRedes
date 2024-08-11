@@ -4,7 +4,7 @@ const initial = Vector2(0,1)
 var direction = initial
 var speed = 100
 var selecting = true
-@onready var player = $"Body"
+@onready var player = $"."
 @onready var selection = $"Body/AnimationPlayer"
 
 func _ready():

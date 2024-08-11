@@ -61,7 +61,6 @@ scale = Vector2(1.1, 1.1)
 texture = ExtResource("1_o67ui")
 
 [node name="point" type="StaticBody2D" parent="."]
-visible = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="point"]
 shape = SubResource("CircleShape2D_h664d")

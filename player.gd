@@ -5,7 +5,7 @@ var direction = initial
 var speed = 100
 var deacelaration = 0
 var selecting = true
-@onready var player = $"Body"
+@onready var player = $"."
 @onready var selection = $"Body/AnimationPlayer" 
 
 func _ready():
