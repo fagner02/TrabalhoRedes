@@ -5,7 +5,7 @@ var direction = initial
 var speed = 100
 var selecting = true
 @onready var player = $"."
-@onready var selection = $"Body/AnimationPlayer"
+@onready var selection = $"outline/AnimationPlayer"
 
 func _ready():
 	var _rotation = player.rotation

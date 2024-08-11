@@ -142,44 +142,44 @@ input_pickable = true
 motion_mode = 1
 script = ExtResource("1_4jn8a")
 
-[node name="Body" type="Sprite2D" parent="."]
+[node name="outline" type="Sprite2D" parent="."]
 scale = Vector2(0.429119, 0.382576)
 texture = ExtResource("2_f1m5m")
 
-[node name="Body2" type="Sprite2D" parent="Body"]
-self_modulate = Color(1, 0.419608, 0.431373, 1)
+[node name="body" type="Sprite2D" parent="outline"]
+self_modulate = Color(1, 0.42, 0.42, 1)
 position = Vector2(-0.00012207, -11.7623)
 scale = Vector2(0.941964, 0.980198)
 texture = ExtResource("2_f1m5m")
 
-[node name="Mouth" type="Sprite2D" parent="Body/Body2"]
+[node name="Mouth" type="Sprite2D" parent="outline/body"]
 position = Vector2(-4.32944, -44.6666)
 scale = Vector2(1.54621, 1.7971)
 texture = ExtResource("3_5d5kl")
 
-[node name="Eyes" type="Sprite2D" parent="Body/Body2"]
+[node name="Eyes" type="Sprite2D" parent="outline/body"]
 modulate = Color(0, 0.619608, 0.631373, 1)
 position = Vector2(-5.56635, -88.6666)
 scale = Vector2(1.30347, 1.26667)
 texture = ExtResource("4_xexfa")
 
-[node name="Eyes2" type="Sprite2D" parent="Body/Body2/Eyes"]
+[node name="Eyes2" type="Sprite2D" parent="outline/body/Eyes"]
 modulate = Color(0, 0.286275, 0.290196, 1)
 position = Vector2(0.474548, -1.57892)
 scale = Vector2(0.908163, 0.473684)
 texture = ExtResource("4_xexfa")
 
-[node name="Circle" type="Sprite2D" parent="Body"]
+[node name="Circle" type="Sprite2D" parent="outline"]
 position = Vector2(9.15527e-05, -13.0693)
 scale = Vector2(2.33036, 2.61386)
 texture = ExtResource("5_jbof0")
 
-[node name="Arrow" type="Sprite2D" parent="Body"]
+[node name="Arrow" type="Sprite2D" parent="outline"]
 position = Vector2(-4.35156, -346.729)
 scale = Vector2(1.17882, 1.14834)
 texture = ExtResource("6_fcljj")
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="Body"]
+[node name="AnimationPlayer" type="AnimationPlayer" parent="outline"]
 root_node = NodePath("../Arrow")
 libraries = {
 "": SubResource("AnimationLibrary_qa242")

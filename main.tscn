@@ -238,6 +238,17 @@ unique_name_in_owner = true
 layout_mode = 2
 text = "código:"
 
+[node name="time" type="TextEdit" parent="Control/MarginContainer/hostmenu/Container/VBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 35)
+layout_direction = 2
+layout_mode = 2
+theme_override_colors/background_color = Color(0.615686, 0.768627, 0, 1)
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_placeholder_color = Color(0.26, 0.26, 0.26, 1)
+text = "20"
+placeholder_text = "Time"
+
 [node name="waitingsign" type="MarginContainer" parent="Control/MarginContainer"]
 unique_name_in_owner = true
 visible = false
@@ -350,15 +361,16 @@ grow_vertical = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Control/result"]
+[node name="HBoxContainer" type="VBoxContainer" parent="Control/result"]
 layout_mode = 2
+size_flags_vertical = 4
 
-[node name="scoresign" type="MarginContainer" parent="Control/result"]
+[node name="scoresign" type="MarginContainer" parent="Control/result/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="NinePatchRect" type="NinePatchRect" parent="Control/result/scoresign"]
+[node name="NinePatchRect" type="NinePatchRect" parent="Control/result/HBoxContainer/scoresign"]
 layout_mode = 2
 texture = ExtResource("4_gw6xq")
 region_rect = Rect2(0.0375366, 0.0174923, 126.962, 128.983)
@@ -367,7 +379,7 @@ patch_margin_top = 17
 patch_margin_right = 18
 patch_margin_bottom = 19
 
-[node name="Container" type="MarginContainer" parent="Control/result/scoresign"]
+[node name="Container" type="MarginContainer" parent="Control/result/HBoxContainer/scoresign"]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
@@ -376,11 +388,39 @@ theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 20
 theme_override_constants/margin_bottom = 10
 
-[node name="result_text" type="Label" parent="Control/result/scoresign/Container"]
+[node name="result_text" type="Label" parent="Control/result/HBoxContainer/scoresign/Container"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 42
 text = "YOU WIN"
+
+[node name="scoresign2" type="MarginContainer" parent="Control/result/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="NinePatchRect" type="NinePatchRect" parent="Control/result/HBoxContainer/scoresign2"]
+layout_mode = 2
+texture = ExtResource("4_gw6xq")
+region_rect = Rect2(0.0375366, 0.0174923, 126.962, 128.983)
+patch_margin_left = 17
+patch_margin_top = 17
+patch_margin_right = 18
+patch_margin_bottom = 19
+
+[node name="Container" type="MarginContainer" parent="Control/result/HBoxContainer/scoresign2"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 10
+
+[node name="result_text" type="Button" parent="Control/result/HBoxContainer/scoresign2/Container"]
+layout_mode = 2
+text = "restart"
+flat = true
 
 [node name="PointTimer" type="Timer" parent="."]
 
@@ -392,4 +432,5 @@ text = "YOU WIN"
 [connection signal="pressed" from="Control/MarginContainer/startmenu/Container/VBoxContainer/join" to="." method="_on_button_join_host"]
 [connection signal="text_changed" from="Control/MarginContainer/startmenu/Container/VBoxContainer/name" to="." method="_on_name_text_changed"]
 [connection signal="pressed" from="Control/MarginContainer/hostmenu/Container/VBoxContainer/start" to="." method="_on_start_pressed"]
+[connection signal="pressed" from="Control/result/HBoxContainer/scoresign2/Container/result_text" to="." method="restart"]
 [connection signal="timeout" from="PointTimer" to="." method="_on_point_timeout"]

@@ -3,10 +3,10 @@ extends CharacterBody2D
 const initial = Vector2(0,1)
 var direction = initial
 var speed = 100
-var deacelaration = 0
 var selecting = true
 @onready var player = $"."
-@onready var selection = $"Body/AnimationPlayer" 
+@onready var selection = $"outline/AnimationPlayer" 
+var color = Color.from_hsv(0.0,0.58, 1)
 
 func _ready():
 	var _rotation = player.rotation
@@ -24,9 +24,12 @@ func _input(event):
 			direction = -initial.rotated(_rotation)
 			velocity = speed * direction
 		else: 
-			selecting = true
-			selection.play("open")
+			select()
 		$"../".send_select(direction, player.rotation, player.position, velocity)
+
+func select():
+	selecting = true
+	selection.play("open")
 
 func _process(_delta):
 	if selecting: 
