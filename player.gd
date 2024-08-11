@@ -3,26 +3,30 @@ extends CharacterBody2D
 const initial = Vector2(0,1)
 var direction = initial
 var speed = 100
+var deacelaration = 0
 var selecting = true
 @onready var player = $"Body"
-@onready var selection = $"Body/AnimationPlayer"
-@export var pos = Vector2(0,0)
+@onready var selection = $"Body/AnimationPlayer" 
 
 func _ready():
 	var _rotation = player.rotation
 	direction = initial.rotated(_rotation)
 	velocity = speed * direction
 
-func select(new_direction: Vector2):
-	if selecting:
-		selecting = false
-		selection.play("close")
-		direction = new_direction
-		velocity = speed * direction
-		player.rotation = velocity.angle()+deg_to_rad(90)
-	else: 
-		selecting = true
-		selection.play("open")
+func _input(event):
+	if (not $"../".started):
+		return
+	if(event.is_action_pressed("space")) or (event is InputEventScreenTouch and event.is_pressed()):
+		if selecting:
+			selecting = false
+			selection.play("close")
+			var _rotation = player.rotation
+			direction = -initial.rotated(_rotation)
+			velocity = speed * direction
+		else: 
+			selecting = true
+			selection.play("open")
+		$"../".send_select(direction, player.rotation, player.position, velocity)
 
 func _process(_delta):
 	if selecting: 
@@ -32,5 +36,6 @@ func _process(_delta):
 	if collision:
 		velocity = velocity.bounce(collision.get_normal())
 		player.rotation = velocity.angle()+deg_to_rad(90)
+		$"../".send_collide(direction, player.rotation, player.position, velocity)
 	velocity *= 0.99
 	

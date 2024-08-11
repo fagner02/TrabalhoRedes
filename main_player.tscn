@@ -1,6 +1,6 @@
 [gd_scene load_steps=12 format=3 uid="uid://c1fmbu4pbc37j"]
 
-[ext_resource type="Script" path="res://CharacterBody2D.gd" id="1_7ll71"]
+[ext_resource type="Script" path="res://player.gd" id="1_vym0k"]
 [ext_resource type="Texture2D" uid="uid://i8yid1br513g" path="res://body.svg" id="2_2kkql"]
 [ext_resource type="Texture2D" uid="uid://bw50iko5fb77a" path="res://mouth.svg" id="3_e21a2"]
 [ext_resource type="Texture2D" uid="uid://dt10hrapn6vef" path="res://eyes.svg" id="4_xypg7"]
@@ -140,10 +140,9 @@ radius = 60.0
 position = Vector2(0.00012207, 3.05176e-05)
 input_pickable = true
 motion_mode = 1
-script = ExtResource("1_7ll71")
+script = ExtResource("1_vym0k")
 
 [node name="Body" type="Sprite2D" parent="."]
-position = Vector2(395, 376)
 scale = Vector2(0.429119, 0.382576)
 texture = ExtResource("2_2kkql")
 
@@ -187,5 +186,4 @@ libraries = {
 }
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(395, 371)
 shape = SubResource("CircleShape2D_t2ptt")

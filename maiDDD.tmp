@@ -1,0 +1,198 @@
+[gd_scene load_steps=11 format=3 uid="uid://ckjs411fycqgg"]
+
+[ext_resource type="Script" path="res://client.gd" id="1_m7rvg"]
+[ext_resource type="Texture2D" uid="uid://31hxj00uwrwu" path="res://6543469.jpg" id="2_2pgbr"]
+[ext_resource type="PackedScene" uid="uid://c1fmbu4pbc37j" path="res://main_player.tscn" id="3_v2gdt"]
+[ext_resource type="Texture2D" uid="uid://1h4magwas8nq" path="res://ninepatch.svg" id="4_gw6xq"]
+
+[sub_resource type="Environment" id="Environment_dk12b"]
+background_mode = 3
+glow_enabled = true
+glow_blend_mode = 1
+glow_hdr_threshold = 0.5
+
+[sub_resource type="Animation" id="Animation_q104p"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [-6.28319]
+}
+
+[sub_resource type="Animation" id="Animation_qlub6"]
+resource_name = "idle"
+length = 40.0
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 40),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [-6.28319, 0.0]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_xsany"]
+_data = {
+"RESET": SubResource("Animation_q104p"),
+"idle": SubResource("Animation_qlub6")
+}
+
+[sub_resource type="SegmentShape2D" id="SegmentShape2D_dbcd8"]
+a = Vector2(-399, -2)
+b = Vector2(775, -2)
+
+[sub_resource type="SegmentShape2D" id="SegmentShape2D_htoyg"]
+a = Vector2(-393, -660)
+b = Vector2(-393, 4)
+
+[node name="Node2D" type="Node2D"]
+script = ExtResource("1_m7rvg")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_dk12b")
+
+[node name="background" type="Sprite2D" parent="."]
+light_mask = 0
+position = Vector2(580.104, 329.349)
+rotation = -6.28319
+scale = Vector2(0.56, 0.66)
+texture = ExtResource("2_2pgbr")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="background"]
+callback_mode_method = 1
+libraries = {
+"": SubResource("AnimationLibrary_xsany")
+}
+autoplay = "idle"
+
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
+position = Vector2(390, -1)
+shape = SubResource("SegmentShape2D_dbcd8")
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="StaticBody2D"]
+position = Vector2(393, 658)
+shape = SubResource("SegmentShape2D_dbcd8")
+
+[node name="CollisionShape2D3" type="CollisionShape2D" parent="StaticBody2D"]
+position = Vector2(393, 658)
+shape = SubResource("SegmentShape2D_dbcd8")
+
+[node name="CollisionShape2D4" type="CollisionShape2D" parent="StaticBody2D"]
+position = Vector2(393, 658)
+shape = SubResource("SegmentShape2D_htoyg")
+
+[node name="CollisionShape2D5" type="CollisionShape2D" parent="StaticBody2D"]
+position = Vector2(1550, 652)
+shape = SubResource("SegmentShape2D_htoyg")
+
+[node name="player" parent="." instance=ExtResource("3_v2gdt")]
+
+[node name="textt" type="RichTextLabel" parent="."]
+offset_left = 58.0
+offset_top = 45.0
+offset_right = 618.0
+offset_bottom = 404.0
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 1158.0
+offset_bottom = 660.0
+
+[node name="MarginContainer" type="MarginContainer" parent="Control"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 100
+theme_override_constants/margin_top = 50
+theme_override_constants/margin_right = 100
+theme_override_constants/margin_bottom = 50
+
+[node name="MarginContainer" type="MarginContainer" parent="Control/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="NinePatchRect" type="NinePatchRect" parent="Control/MarginContainer/MarginContainer"]
+layout_mode = 2
+texture = ExtResource("4_gw6xq")
+region_rect = Rect2(0.0375366, 0.0174923, 126.962, 128.983)
+patch_margin_left = 17
+patch_margin_top = 17
+patch_margin_right = 18
+patch_margin_bottom = 19
+
+[node name="Container" type="MarginContainer" parent="Control/MarginContainer/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Control/MarginContainer/MarginContainer/Container"]
+layout_direction = 2
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="create" type="Button" parent="Control/MarginContainer/MarginContainer/Container/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/icon_normal_color = Color(0.615686, 0.768627, 0, 1)
+theme_override_colors/icon_pressed_color = Color(0, 0, 0, 1)
+theme_override_colors/icon_hover_color = Color(0, 0, 0, 1)
+theme_override_colors/icon_hover_pressed_color = Color(0, 0, 0, 1)
+theme_override_colors/icon_focus_color = Color(0, 0, 0, 1)
+theme_override_colors/icon_disabled_color = Color(0, 0, 0, 1)
+text = "Create Room"
+flat = true
+
+[node name="join" type="Button" parent="Control/MarginContainer/MarginContainer/Container/VBoxContainer"]
+layout_mode = 2
+text = "Join Room"
+flat = true
+
+[node name="RichTextLabel" type="RichTextLabel" parent="Control/MarginContainer/MarginContainer/Container/VBoxContainer"]
+layout_mode = 2
+tooltip_text = "message"
+
+[node name="iptext" type="TextEdit" parent="Control/MarginContainer/MarginContainer/Container/VBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 35)
+layout_mode = 2
+theme_override_colors/background_color = Color(0.616, 0.77, 0, 1)
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_placeholder_color = Color(0.25, 0.25, 0.25, 1)
+placeholder_text = "Código"
+
+[node name="name" type="TextEdit" parent="Control/MarginContainer/MarginContainer/Container/VBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 35)
+layout_direction = 2
+layout_mode = 2
+theme_override_colors/background_color = Color(0.615686, 0.768627, 0, 1)
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_placeholder_color = Color(0.26, 0.26, 0.26, 1)
+placeholder_text = "Nome"
+
+[connection signal="pressed" from="Control/MarginContainer/MarginContainer/Container/VBoxContainer/create" to="." method="_on_button_create_host"]
+[connection signal="pressed" from="Control/MarginContainer/MarginContainer/Container/VBoxContainer/join" to="." method="_on_button_join_host"]
+[connection signal="text_changed" from="Control/MarginContainer/MarginContainer/Container/VBoxContainer/name" to="." method="_on_name_text_changed"]
