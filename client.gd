@@ -131,11 +131,14 @@ func _process(_delta):
 		var rpos = rand_pos()
 		connection.put_packet(JSON.stringify({
 			"action":"connected",
-			"players": oponents + [
-				{"name":playername,
+			"players": oponents.map(func(x): return {
+				"name": x.name, "color": x.hue, "pos": {"x": x.pos.x, "y": x.pos.y}
+			}) + [{
+				"name":playername,
 				"color": hue, 
-				"pos": {"x": initial_pos.x, "y": initial_pos.y}}],
-			"color": (oponents.size()+1)*0.1,
+				"pos": {"x": initial_pos.x, "y": initial_pos.y}
+			}],
+			"color": (oponents.size()+1)*0.15,
 			"pos": {"x": rpos.x, "y": rpos.y}
 		}).to_utf8_buffer())
 	get_packets()
@@ -156,6 +159,7 @@ func get_packets():
 			}).to_utf8_buffer())
 			player.get_child(0).get_child(0).self_modulate.h = res.color
 			player.position = Vector2(res.pos.x, res.pos.y)
+			hue = res.color
 			for _player in res.players:
 				add_oponent(_player.name, _player.color, Vector2(_player.pos.x, _player.pos.y))
 		if (res.action == "add"):
@@ -222,6 +226,7 @@ func consume_point(_name):
 	var packet = {
 		"action": "point",
 		"player": playername,
+		"color": hue,
 		"name":  point.name
 	}
 	point.point.queue_free()
@@ -232,19 +237,28 @@ func consume_point(_name):
 		client.put_packet(JSON.stringify(packet).to_utf8_buffer())
 
 func oponent_point(res):
-	oponents.filter(func(x): return x.name == res.player)[0].score+=1
+	var oponent = get_oponent(res.player, res.color)
+	if oponent == null:
+		return
+	oponent.score+=1
+	
 	var list = points.filter(func(x): return x.name == res.name)
 	if list.size() == 0:
 		return
 	var point = list[0]
 	point.point.queue_free()
 	points.erase(point)
-	
-func oponent_select(res):
-	var list = oponents.filter(func(x): return x.name == res.player)
+
+func get_oponent(_name, _color):
+	var list = oponents.filter(func(x): return x.name == _name and x.hue == _color)
 	if list.size() == 0:
+		return null
+	return list[0]
+
+func oponent_select(res):
+	var oponent = get_oponent(res.player, res.color)
+	if oponent == null:
 		return
-	var oponent = list[0]
 	oponent.player.select(
 		Vector2(res.new_direction.x, res.new_direction.y), 
 		res.rot, 
@@ -253,10 +267,9 @@ func oponent_select(res):
 	)
 
 func oponent_collide(res):
-	var list = oponents.filter(func(x): return x.name == res.player)
-	if list.size() == 0:
+	var oponent = get_oponent(res.player, res.color)
+	if oponent == null:
 		return
-	var oponent = list[0]
 	oponent.player.collide(
 		Vector2(res.new_direction.x, res.new_direction.y), 
 		res.rot, 
@@ -272,7 +285,8 @@ func send_select(new_direction: Vector2, rot, pos: Vector2, vel):
 		"pos": {"x": pos.x, "y":pos.y},
 		"rot": rot,
 		"vel": {"x":vel.x, "y": vel.y},
-		"player": playername
+		"player": playername,
+		"color": hue
 	}
 	if is_host:
 		send_packets(packet)
@@ -287,7 +301,8 @@ func send_collide(new_direction: Vector2, rot, pos: Vector2, vel):
 		"pos": {"x": pos.x, "y":pos.y},
 		"rot": rot,
 		"vel": {"x":vel.x, "y": vel.y},
-		"player": playername
+		"player": playername,
+		"color": hue
 	}
 	if is_host:
 		send_packets(packet)
