@@ -176,24 +176,25 @@ func get_packets():
 		return
 		
 	for peer: Peer in peers:
-		if peer.connection.get_available_packet_count() > 0:
-			var res = JSON.parse_string(peer.connection.get_packet().get_string_from_utf8())
+		if peer.connection.get_available_packet_count() <= 0:
+			continue
+		
+		var res = JSON.parse_string(peer.connection.get_packet().get_string_from_utf8())
 
-			if res.action == "connected":
-				player.position = initial_pos
-			if res.action == "add":
-				add_oponent(res.name, res.color, Vector2(res.pos.x, res.pos.y))
-				send_packets(res, peer)
-			if (res.action == "select"):
-				oponent_select(res)
-				send_packets(res, peer)
-			if (res.action == "collide"):
-				oponent_collide(res)
-				send_packets(res, peer)
-			if res.action == "point":
-				oponent_point(res)
-				send_packets(res, peer)
-			
+		if res.action == "connected":
+			player.position = initial_pos
+		if res.action == "add":
+			add_oponent(res.name, res.color, Vector2(res.pos.x, res.pos.y))
+			send_packets(res, peer)
+		if (res.action == "select"):
+			oponent_select(res)
+			send_packets(res, peer)
+		if (res.action == "collide"):
+			oponent_collide(res)
+			send_packets(res, peer)
+		if res.action == "point":
+			oponent_point(res)
+			send_packets(res, peer)
 
 func send_packets(data, _peer = null):
 	for peer: Peer in peers:
