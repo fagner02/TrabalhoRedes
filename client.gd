@@ -259,11 +259,13 @@ func oponent_select(res):
 	var oponent = get_oponent(res.player, res.color)
 	if oponent == null:
 		return
+	print(res.selecting, typeof(res.selecting))
 	oponent.player.select(
 		Vector2(res.new_direction.x, res.new_direction.y), 
 		res.rot, 
 		Vector2(res.pos.x, res.pos.y),
-		Vector2(res.vel.x, res.vel.y)
+		Vector2(res.vel.x, res.vel.y),
+		res.selecting
 	)
 
 func oponent_collide(res):
@@ -277,7 +279,7 @@ func oponent_collide(res):
 		Vector2(res.vel.x, res.vel.y)
 	)
 
-func send_select(new_direction: Vector2, rot, pos: Vector2, vel):
+func send_select(new_direction: Vector2, rot, pos: Vector2, vel, selecting):
 	var packet = {
 		"from": ":",
 		"action": "select",
@@ -286,7 +288,8 @@ func send_select(new_direction: Vector2, rot, pos: Vector2, vel):
 		"rot": rot,
 		"vel": {"x":vel.x, "y": vel.y},
 		"player": playername,
-		"color": hue
+		"color": hue,
+		"selecting": selecting
 	}
 	if is_host:
 		send_packets(packet)
@@ -366,7 +369,7 @@ func _on_start_pressed():
 		"action": "start",
 		"time": time
 	})
-	point_timer.start(2)
+	point_timer.start(0.5)
 	game_timer.start(time)
 	pass
 

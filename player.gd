@@ -25,7 +25,8 @@ func _input(event):
 			velocity = speed * direction
 		else: 
 			select()
-		$"../".send_select(direction, player.rotation, player.position, velocity)
+		print(velocity)
+		$"../".send_select(direction, player.rotation, player.position, velocity, not selecting)
 
 func select():
 	selecting = true
