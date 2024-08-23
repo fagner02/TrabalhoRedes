@@ -28,8 +28,6 @@ func select(new_direction: Vector2, rot, pos, vel, _selecting):
 		print("open")
 		selecting = true
 		selection.play("open")
-	
-	
 
 func collide(new_direction: Vector2, rot, pos, vel):
 	player.rotation = rot
